@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoopCard — Cada targeta, una història de reciclatge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1D9E75;
+    --green-dark: #0F6E56;
+    --green-light: #E1F5EE;
+    --blue: #1a3a6e;
+    --blue-mid: #1565c0;
+    --blue-light: #e8f1fb;
+    --white: #ffffff;
+    --off: #f7f9f8;
+    --text: #141a14;
+    --muted: #5a6b62;
+    --border: #d4e5dc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 68px;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 22px; color: var(--blue); text-decoration: none;
+  }
+  .nav-logo span { color: var(--green); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; font-size: 14px; font-weight: 500;
+    color: var(--muted); transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a:hover { color: var(--green-dark); }
+  .nav-cta {
+    background: var(--green); color: white;
+    border: none; padding: 10px 22px;
+    border-radius: 6px; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none; transition: background 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .nav-cta:hover { background: var(--green-dark); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; padding-top: 68px;
+    background: linear-gradient(135deg, #0a2447 0%, #1a3a6e 40%, #0f6e56 100%);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; padding: 80px 5%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    position: relative; z-index: 1;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(29,158,117,0.2); border: 1px solid rgba(29,158,117,0.4);
+    color: #7de8c0; padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: #7de8c0; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-size: clamp(42px, 5vw, 68px);
+    font-weight: 800; color: white; line-height: 1.05;
+    letter-spacing: -0.02em; margin-bottom: 24px;
+  }
+  .hero h1 span { color: #7de8c0; }
+  .hero p {
+    font-size: 17px; color: rgba(255,255,255,0.72); line-height: 1.7;
+    margin-bottom: 40px; font-weight: 300;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green); color: white; padding: 14px 28px;
+    border-radius: 8px; font-size: 15px; font-weight: 600;
+    text-decoration: none; transition: all 0.2s;
+    border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: #17b785; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent; color: white; padding: 14px 28px;
+    border-radius: 8px; font-size: 15px; font-weight: 600;
+    text-decoration: none; border: 1.5px solid rgba(255,255,255,0.3);
+    transition: all 0.2s; cursor: pointer;
+  }
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+  }
+  .card-stack {
+    position: relative; width: 360px; height: 320px;
+  }
+  .card-3d {
+    position: absolute; width: 280px; height: 175px;
+    border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 22px 24px; cursor: pointer;
+    transition: transform 0.4s ease;
+  }
+  .card-3d:nth-child(1) {
+    background: linear-gradient(135deg, #1a3a6e, #0c2a55);
+    top: 0; left: 0; transform: rotate(-6deg);
+  }
+  .card-3d:nth-child(2) {
+    background: linear-gradient(135deg, #0f6e56, #085041);
+    top: 60px; left: 60px; transform: rotate(2deg);
+    z-index: 2;
+  }
+  .card-3d:nth-child(3) {
+    background: linear-gradient(135deg, #2c3e50, #1a252f);
+    top: 120px; left: 30px; transform: rotate(-3deg);
+    z-index: 1;
+  }
+  .card-logo-mini {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 13px; color: rgba(255,255,255,0.9); letter-spacing: 0.04em;
+  }
+  .card-logo-mini span { color: #7de8c0; }
+  .card-chip {
+    width: 32px; height: 24px; background: rgba(255,255,255,0.15);
+    border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);
+  }
+  .card-number { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.15em; }
+  .card-name { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 500; }
+  .recycled-badge {
+    position: absolute; bottom: -10px; right: -10px;
+    background: #7de8c0; color: #085041; padding: 8px 12px;
+    border-radius: 20px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .hero-stats {
+    display: flex; gap: 40px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .stat { text-align: left; }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+    color: white; line-height: 1;
+  }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+  /* SECTIONS common */
+  section { padding: 96px 5%; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--green);
+    margin-bottom: 12px; display: block;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-size: clamp(30px, 4vw, 48px);
+    font-weight: 800; color: var(--blue); line-height: 1.1;
+    letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 17px; color: var(--muted); line-height: 1.7;
+    max-width: 560px; font-weight: 300;
+  }
+  .section-head { margin-bottom: 56px; }
+
+  /* ABOUT */
+  .about { background: var(--off); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+  .about-visual {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--green-dark) 100%);
+    border-radius: 20px; padding: 48px 40px;
+    color: white; position: relative; overflow: hidden;
+  }
+  .about-visual::before {
+    content: '♻'; position: absolute; right: -20px; top: -20px;
+    font-size: 160px; opacity: 0.06; line-height: 1;
+  }
+  .about-slogan {
+    font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800;
+    line-height: 1.3; margin-bottom: 24px; color: white;
+  }
+  .about-slogan em { color: #7de8c0; font-style: normal; }
+  .about-desc { font-size: 15px; color: rgba(255,255,255,0.72); line-height: 1.7; }
+  .values-list { list-style: none; margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+  .values-list li {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 15px; color: var(--text); line-height: 1.5;
+  }
+  .val-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--green-light); display: flex; align-items: center;
+    justify-content: center; font-size: 16px; flex-shrink: 0;
+  }
+  .val-title { font-weight: 600; color: var(--blue); display: block; margin-bottom: 2px; }
+  .val-desc { font-size: 13px; color: var(--muted); }
+
+  /* PRODUCTS */
+  .products { background: var(--white); }
+  .products-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .product-card {
+    border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; transition: all 0.3s; background: white;
+    cursor: pointer;
+  }
+  .product-card:hover {
+    transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    border-color: var(--green);
+  }
+  .product-img {
+    height: 220px; background: var(--blue-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px; position: relative;
+  }
+  .product-img.green-bg { background: var(--green-light); }
+  .product-img.blue-bg { background: var(--blue-light); }
+  .product-img.warm-bg { background: #fef3e2; }
+  .product-tag {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--green); color: white; padding: 4px 10px;
+    border-radius: 20px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .product-tag.star { background: #f59e0b; }
+  .product-body { padding: 24px; }
+  .product-name {
+    font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 700;
+    color: var(--blue); margin-bottom: 8px;
+  }
+  .product-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .product-price {
+    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+    color: var(--green);
+  }
+  .product-price span { font-size: 13px; font-weight: 400; color: var(--muted); }
+  .product-features { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .feature-pill {
+    background: var(--green-light); color: var(--green-dark);
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+
+  /* STAR PRODUCT */
+  .star-product {
+    background: linear-gradient(135deg, #0a2447, #1a3a6e);
+    border-radius: 24px; padding: 64px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    align-items: center; margin-bottom: 56px; position: relative; overflow: hidden;
+  }
+  .star-product::after {
+    content: '★'; position: absolute; right: -20px; bottom: -30px;
+    font-size: 220px; color: rgba(255,255,255,0.03);
+  }
+  .star-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3);
+    color: #ffd700; padding: 5px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .star-title {
+    font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800;
+    color: white; line-height: 1.1; margin-bottom: 16px;
+  }
+  .star-title span { color: #7de8c0; }
+  .star-desc { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 28px; }
+  .star-features { display: flex; flex-direction: column; gap: 12px; }
+  .sf-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: rgba(255,255,255,0.8);
+  }
+  .sf-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #7de8c0; flex-shrink: 0;
+  }
+  .star-cards-visual {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .mini-card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 20px 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .mini-card-logo {
+    font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+    color: #7de8c0; letter-spacing: 0.06em;
+  }
+  .mini-chip { width: 28px; height: 20px; background: rgba(255,255,255,0.12); border-radius: 3px; }
+  .mini-num { font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.14em; }
+  .mini-badge {
+    background: rgba(29,158,117,0.3); border: 1px solid rgba(29,158,117,0.5);
+    color: #7de8c0; font-size: 9px; font-weight: 700; padding: 2px 8px;
+    border-radius: 20px; text-transform: uppercase; width: fit-content;
+  }
+  .mini-qr {
+    width: 36px; height: 36px; background: rgba(255,255,255,0.1);
+    border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  /* SECTOR CARDS */
+  .sectors { background: var(--off); }
+  .sectors-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .sector-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px 24px; text-align: center;
+    transition: all 0.3s;
+  }
+  .sector-card:hover {
+    border-color: var(--green); transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(29,158,117,0.12);
+  }
+  .sector-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .sector-name { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--blue); font-size: 15px; }
+  .sector-desc { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+  /* PROCESS */
+  .process { background: white; }
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    position: relative;
+  }
+  .process-steps::before {
+    content: ''; position: absolute;
+    top: 40px; left: calc(12.5% + 20px); right: calc(12.5% + 20px);
+    height: 2px; background: linear-gradient(90deg, var(--green), var(--blue));
+    z-index: 0;
+  }
+  .step { text-align: center; position: relative; z-index: 1; }
+  .step-num {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--blue));
+    color: white; font-family: 'Syne', sans-serif;
+    font-size: 28px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; box-shadow: 0 4px 20px rgba(29,158,117,0.3);
+  }
+  .step-title { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--blue); font-size: 16px; margin-bottom: 8px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* TEAM */
+  .team { background: var(--off); }
+  .team-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+  }
+  .team-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 20px; text-align: center;
+    transition: all 0.3s;
+  }
+  .team-card:hover { border-color: var(--green); transform: translateY(-3px); }
+  .team-avatar {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    color: white; font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+  }
+  .team-name { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--blue); font-size: 14px; }
+  .team-role { font-size: 12px; color: var(--green-dark); font-weight: 600; margin-top: 4px; }
+
+  /* NUMBERS */
+  .numbers {
+    background: linear-gradient(135deg, #0a2447, #0f6e56);
+    color: white;
+  }
+  .numbers-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+    text-align: center;
+  }
+  .num-val {
+    font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+    color: #7de8c0; line-height: 1;
+  }
+  .num-label { font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 8px; }
+
+  /* CONTACT */
+  .contact { background: white; }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+  .contact-info h3 {
+    font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800;
+    color: var(--blue); margin-bottom: 20px;
+  }
+  .contact-info p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 32px; }
+  .contact-items { display: flex; flex-direction: column; gap: 16px; }
+  .contact-item {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 14px; color: var(--text);
+  }
+  .c-icon {
+    width: 40px; height: 40px; background: var(--green-light);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .contact-form {
+    background: var(--off); border-radius: 20px; padding: 40px;
+    border: 1px solid var(--border);
+  }
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-size: 13px; font-weight: 600;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 12px 16px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    background: white; color: var(--text); outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--green); }
+  .form-group textarea { height: 120px; resize: vertical; }
+  .form-submit {
+    width: 100%; background: var(--green); color: white;
+    border: none; padding: 14px; border-radius: 8px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--green-dark); }
+
+  /* FOOTER */
+  footer {
+    background: #0a1628; color: rgba(255,255,255,0.5);
+    padding: 48px 5%; text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 24px; color: white; margin-bottom: 8px;
+  }
+  .footer-logo span { color: #7de8c0; }
+  .footer-slogan { font-size: 13px; margin-bottom: 28px; font-style: italic; }
+  .footer-links { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+  .footer-links a:hover { color: #7de8c0; }
+  .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 24px 0; }
+  .footer-copy { font-size: 12px; }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: all 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; text-align: center; }
+    .hero-visual { display: none; }
+    .about-grid, .contact-grid, .star-product { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .process-steps::before { display: none; }
+    .numbers-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .star-product { padding: 40px 28px; }
+    .hero-stats { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>Loop</span>Card</a>
+  <ul class="nav-links">
+    <li><a href="#quienes-somos">Nosaltres</a></li>
+    <li><a href="#productes">Productes</a></li>
+    <li><a href="#sectors">Sectors</a></li>
+    <li><a href="#equip">Equip</a></li>
+    <li><a href="#contacte">Contacte</a></li>
+  </ul>
+  <a class="nav-cta" href="#contacte">Sol·licita pressupost</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">100% plàstic reciclat · Economia circular</div>
+      <h1>Cada targeta,<br><span>una nova vida</span><br>per al plàstic.</h1>
+      <p>Transformem residus industrials en targetes professionals de qualitat. Sostenibilitat i funcionalitat per a les empreses que volen marcar la diferència.</p>
+      <div class="hero-btns">
+        <a class="btn-primary" href="#productes">Veure productes</a>
+        <a class="btn-outline" href="#contacte">Parla amb nosaltres</a>
+      </div>
+      <div class="hero-stats" style="margin-top:48px;">
+        <div class="stat"><div class="stat-num">5,99€</div><div class="stat-label">per unitat</div></div>
+        <div class="stat"><div class="stat-num">85×54</div><div class="stat-label">mm estàndard ISO</div></div>
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">plàstic reciclat</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="card-stack">
+        <div class="card-3d">
+          <div class="card-logo-mini"><span>Loop</span>Card</div>
+          <div class="card-chip"></div>
+          <div class="card-number">•••• •••• •••• 4821</div>
+        </div>
+        <div class="card-3d">
+          <div class="card-logo-mini"><span>Loop</span>Card · ACCÉS</div>
+          <div style="font-size:32px;">🏨</div>
+          <div class="card-name">Hotel Access Key</div>
+        </div>
+        <div class="card-3d">
+          <div class="card-logo-mini"><span>Loop</span>Card · FIDELITAT</div>
+          <div style="font-size:28px;">⊞</div>
+          <div class="card-name">Club Member</div>
+        </div>
+        <div class="recycled-badge">♻ Reciclat 100%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about fade-in" id="quienes-somos">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-slogan">"Cada targeta, una <em>història</em> de reciclatge"</div>
+        <p class="about-desc">LoopCard és un projecte d'economia circular que transforma el plàstic industrial residual en productes útils. Fabricats a Canovelles (Barcelona), distribuïm directament a empreses de Catalunya i d'arreu d'Espanya.</p>
+        <div style="margin-top:28px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.15);">
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:8px;">Ubicació</div>
+          <div style="font-size:14px; color:rgba(255,255,255,0.8);">Polígon Industrial Can Castells 115-116<br>08420 Canovelles, Barcelona</div>
+        </div>
+      </div>
+      <div>
+        <span class="section-label">Qui som</span>
+        <h2 class="section-title">La marca que dóna una segona vida al plàstic</h2>
+        <p class="section-sub">Creiem que els residus no son un final, sinó un nou començament. Aquí estan els nostres valors:</p>
+        <ul class="values-list">
+          <li>
+            <div class="val-icon">🌱</div>
+            <div>
+              <span class="val-title">Sostenibilitat</span>
+              <span class="val-desc">Cada decisió té en compte l'impacte mediambiental del nostre projecte.</span>
+            </div>
+          </li>
+          <li>
+            <div class="val-icon">🔍</div>
+            <div>
+              <span class="val-title">Transparència</span>
+              <span class="val-desc">Comuniquem de forma honesta l'origen de tots els materials que fem servir.</span>
+            </div>
+          </li>
+          <li>
+            <div class="val-icon">⚙️</div>
+            <div>
+              <span class="val-title">Qualitat</span>
+              <span class="val-desc">Les nostres targetes compleixen els mateixos estàndards tècnics que les convencionals.</span>
+            </div>
+          </li>
+          <li>
+            <div class="val-icon">💡</div>
+            <div>
+              <span class="val-title">Innovació</span>
+              <span class="val-desc">Millorem contínuament el procés productiu amb tecnologia i creativitat.</span>
+            </div>
+          </li>
+          <li>
+            <div class="val-icon">🤝</div>
+            <div>
+              <span class="val-title">Compromís Social</span>
+              <span class="val-desc">Treballem amb proveïdors locals i fomentem l'ocupació al territori català.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTES -->
+<section class="products fade-in" id="productes">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-label">Catàleg 2026</span>
+      <h2 class="section-title">Tots els nostres productes</h2>
+      <p class="section-sub">Des de la targeta estrella fins a material d'oficina sostenible — tot fabricat amb plàstic reciclat.</p>
+    </div>
+
+    <!-- STAR PRODUCT -->
+    <div class="star-product">
+      <div>
+        <div class="star-label">★ Producte estrella</div>
+        <h3 class="star-title">Targeta <span>100% reciclada</span><br>per a empreses</h3>
+        <p class="star-desc">La nostra targeta principal és disponible per a qualsevol empresa que vulgui implicar-se en un medi ambient més sostenible. Personalitzable i funcional, compleix tots els estàndards internacionals.</p>
+        <div class="star-features">
+          <div class="sf-item"><div class="sf-dot"></div> Contacte NFC per a ús empresarial</div>
+          <div class="sf-item"><div class="sf-dot"></div> Codi de barres o codi QR disponible</div>
+          <div class="sf-item"><div class="sf-dot"></div> Mida estàndard ISO 85×54 mm</div>
+          <div class="sf-item"><div class="sf-dot"></div> Disseny i personalització incloses</div>
+          <div class="sf-item"><div class="sf-dot"></div> Des de 5,99€ / unitat</div>
+        </div>
+      </div>
+      <div class="star-cards-visual">
+        <div class="mini-card">
+          <div class="mini-card-logo">LOOPCARD</div>
+          <div class="mini-chip"></div>
+          <div class="mini-num">•••• 4821</div>
+          <div class="mini-badge">NFC</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-logo">ACCÉS</div>
+          <div class="mini-qr">⊞</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.4);">JOAN PUIG · ID 1234</div>
+          <div class="mini-badge">QR</div>
+        </div>
+        <div class="mini-card" style="grid-column: span 2;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="mini-card-logo">LOOPCARD PREMIUM</div>
+            <div class="mini-badge">PERSONALITZADA</div>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:8px;">Contacta amb nosaltres per a tirades personalitzades i pressupostos.</div>
+          <div style="font-size:11px;color:#7de8c0;font-weight:700;margin-top:4px;">Clients@loopcard.com</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTHER PRODUCTS GRID -->
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img green-bg">
+          📁
+          <div class="product-tag">Oficina</div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Folders reciclats</div>
+          <div class="product-desc">Carpetes d'arxiu de plàstic reciclat, resistents i duradores. Ideals per a documents d'empresa.</div>
+          <div class="product-features">
+            <span class="feature-pill">♻ Reciclat</span>
+            <span class="feature-pill">Personalitzable</span>
+          </div>
+          <div class="product-price">10€ <span>/ pack 100 unitats</span></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img blue-bg">
+          📓
+          <div class="product-tag">Oficina</div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Llibretes sostenibles</div>
+          <div class="product-desc">Llibretes amb espiral, logo LoopCard. Perfectes per a reunions i events corporatius.</div>
+          <div class="product-features">
+            <span class="feature-pill">♻ Reciclat</span>
+            <span class="feature-pill">Logo inclós</span>
+          </div>
+          <div class="product-price">30€ <span>/ pack 2 unitats</span></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img green-bg">
+          📅
+          <div class="product-tag">Oficina</div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Agendes reciclades</div>
+          <div class="product-desc">Agendes corporatives de materials reciclats. Qualitat premium amb compromís ambiental.</div>
+          <div class="product-features">
+            <span class="feature-pill">♻ Reciclat</span>
+            <span class="feature-pill">Premium</span>
+          </div>
+          <div class="product-price">50€ <span>/ pack 10 unitats</span></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img blue-bg">
+          🖊️
+          <div class="product-tag">Merchandising</div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Bolígrafs reciclats</div>
+          <div class="product-desc">Bolígrafs de colors en materials reciclats. Ideals com a regal corporatiu sostenible.</div>
+          <div class="product-features">
+            <span class="feature-pill">♻ Reciclat</span>
+            <span class="feature-pill">Multicolor</span>
+          </div>
+          <div class="product-price">5€ <span>/ pack 30 unitats</span></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img warm-bg">
+          ☕
+          <div class="product-tag">Eco</div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Gots biodegradables</div>
+          <div class="product-desc">Gots d'un sol ús biodegradables amb el logo LoopCard. Perfectes per a events i oficines.</div>
+          <div class="product-features">
+            <span class="feature-pill">Bio</span>
+            <span class="feature-pill">Personalitzable</span>
+          </div>
+          <div class="product-price">10€ <span>/ pack 100 unitats</span></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img green-bg">
+          🗂️
+          <div class="product-tag">Oficina</div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Organitzadors i guixetes</div>
+          <div class="product-desc">Organitzadors d'escriptori de plàstic reciclat. Funcionals i sostenibles per al teu espai de treball.</div>
+          <div class="product-features">
+            <span class="feature-pill">♻ Reciclat</span>
+            <span class="feature-pill">Disseny modular</span>
+          </div>
+          <div class="product-price">5€ <span>/ unitat</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMOS -->
+    <div style="margin-top:32px; background:var(--off); border-radius:20px; padding:48px; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; border:1px solid var(--border);">
+      <div>
+        <span class="section-label">Novetat</span>
+        <h3 style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--blue);margin-bottom:12px;">Termos reciclats</h3>
+        <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:24px;">Termes amb materials reciclats i reutilitzables, compromesos amb el medi ambient i amb gran qualitat. El material manté la temperatura dels líquids fins a <strong>6 hores</strong>.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:14px;color:var(--text);">Blanc / Negre</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green);">6€</span>
+          </div>
+          <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:14px;color:var(--text);">Gris / Blau</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green);">8€</span>
+          </div>
+          <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:14px;color:var(--text);">Rosa / Vermell</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green);">8€</span>
+          </div>
+          <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:14px;color:var(--text);">Verd / Taronja</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green);">8€</span>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:120px;line-height:1;">🧴</div>
+        <div style="margin-top:16px;">
+          <span style="background:var(--green-light);color:var(--green-dark);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;">Manté temperatura 6h</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORS -->
+<section class="sectors fade-in" id="sectors">
+  <div class="section-inner">
+    <div class="section-head" style="text-align:center;">
+      <span class="section-label">A qui ens dirigim</span>
+      <h2 class="section-title">Sectors que ja ens confien la seva imatge</h2>
+      <p class="section-sub" style="margin:0 auto;">Les nostres targetes funcionen per a qualsevol empresa que necessiti identificació, accés o fidelització de clients.</p>
+    </div>
+    <div class="sectors-grid">
+      <div class="sector-card">
+        <span class="sector-icon">🏨</span>
+        <div class="sector-name">Hotels</div>
+        <div class="sector-desc">Targetes d'accés a habitació i àrees exclusives</div>
+      </div>
+      <div class="sector-card">
+        <span class="sector-icon">💪</span>
+        <div class="sector-name">Gimnasos</div>
+        <div class="sector-desc">Targetes de soci i control d'accés</div>
+      </div>
+      <div class="sector-card">
+        <span class="sector-icon">🏦</span>
+        <div class="sector-name">Banca</div>
+        <div class="sector-desc">Targetes de crèdit i dèbit sostenibles</div>
+      </div>
+      <div class="sector-card">
+        <span class="sector-icon">🛒</span>
+        <div class="sector-name">Supermercats</div>
+        <div class="sector-desc">Targetes de fidelitat i descomptes</div>
+      </div>
+      <div class="sector-card">
+        <span class="sector-icon">🏢</span>
+        <div class="sector-name">Corporatiu</div>
+        <div class="sector-desc">Targetes d'identificació de personal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process fade-in">
+  <div class="section-inner">
+    <div class="section-head" style="text-align:center;">
+      <span class="section-label">Com ho fem</span>
+      <h2 class="section-title">Del residu al producte en 4 passos</h2>
+    </div>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Recollida</div>
+        <div class="step-desc">Recollim el plàstic industrial residual d'empreses catalanes a través dels nostres acords logístics.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Trituració</div>
+        <div class="step-desc">Seleccionem i triturem el polietilè i polipropilè per convertir-lo en làmines aptes per impressió.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Producció</div>
+        <div class="step-desc">Impressió i acabats amb tintes especialitzades. Control de qualitat exhaustiu en cada unitat.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">Lliurament</div>
+        <div class="step-desc">Distribució directa sense intermediaris. Ràpida i personalitzada per a cada client empresarial.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="numbers fade-in">
+  <div class="section-inner">
+    <div class="numbers-grid">
+      <div>
+        <div class="num-val">5,99€</div>
+        <div class="num-label">Preu per unitat (vs 7,50€ competència)</div>
+      </div>
+      <div>
+        <div class="num-val">9.600</div>
+        <div class="num-label">Unitats objectiu primer any</div>
+      </div>
+      <div>
+        <div class="num-val">30</div>
+        <div class="num-label">Clients actius objectiu any 1</div>
+      </div>
+      <div>
+        <div class="num-val">85%</div>
+        <div class="num-label">Satisfacció mínima garantida</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team fade-in" id="equip">
+  <div class="section-inner">
+    <div class="section-head" style="text-align:center;">
+      <span class="section-label">El nostre equip</span>
+      <h2 class="section-title">Persones darrere LoopCard</h2>
+      <p class="section-sub" style="margin:0 auto;">Un equip de set persones apassionades per la sostenibilitat i la innovació empresarial.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">PM</div>
+        <div class="team-name">Paula Martínez</div>
+        <div class="team-role">Direcció General</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">BS</div>
+        <div class="team-name">Badiaa Seraiti</div>
+        <div class="team-role">Cap de Màrqueting</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">AD</div>
+        <div class="team-name">Asiatou Dieng</div>
+        <div class="team-role">Producció i Disseny</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">IM</div>
+        <div class="team-name">Irene Marchan</div>
+        <div class="team-role">Producció i Disseny</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">AR</div>
+        <div class="team-name">Àlex Rodríguez</div>
+        <div class="team-role">Directora de Projecte</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">AG</div>
+        <div class="team-name">Alba García</div>
+        <div class="team-role">Directora Comercial</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">MD</div>
+        <div class="team-name">Mama Diaby</div>
+        <div class="team-role">Responsable de Finances</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact fade-in" id="contacte">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-label">Contacte</span>
+      <h2 class="section-title">Parlem de la teva empresa</h2>
+      <p class="section-sub">Per a més informació sobre preus i volums, contacteu amb nosaltres. Adaptarem la proposta a les vostres necessitats.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Estem aquí per ajudar-te</h3>
+        <p>Treballem directament amb empreses. Sense intermediaris, sense sorpreses. Explica'ns el que necessites i et fem una proposta personalitzada.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="c-icon">📧</div>
+            <div>
+              <div style="font-weight:600;font-size:14px;">Email</div>
+              <div style="color:var(--muted);font-size:13px;">Clients@loopcard.com</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="c-icon">📞</div>
+            <div>
+              <div style="font-weight:600;font-size:14px;">Telèfon</div>
+              <div style="color:var(--muted);font-size:13px;">94 844 50 50 · +34 678 67 67 67</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="c-icon">📍</div>
+            <div>
+              <div style="font-weight:600;font-size:14px;">Oficines</div>
+              <div style="color:var(--muted);font-size:13px;">Polígon Industrial Can Castells 115-116<br>08420 Canovelles, Barcelona</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="c-icon">🌐</div>
+            <div>
+              <div style="font-weight:600;font-size:14px;">Web</div>
+              <div style="color:var(--muted);font-size:13px;">www.loopcard.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <div class="form-group">
+          <label>Nom de l'empresa *</label>
+          <input type="text" placeholder="Ex: Hotel Barcelona Palace">
+        </div>
+        <div class="form-group">
+          <label>Email de contacte *</label>
+          <input type="email" placeholder="contacte@empresa.com">
+        </div>
+        <div class="form-group">
+          <label>Producte d'interès</label>
+          <select>
+            <option>Targetes reciclades (producte estrella)</option>
+            <option>Material d'oficina sostenible</option>
+            <option>Termos reciclats</option>
+            <option>Merchandising corporatiu</option>
+            <option>Altres productes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Missatge</label>
+          <textarea placeholder="Explica'ns les teves necessitats: quantitat aproximada, tipus de targeta, personalització..."></textarea>
+        </div>
+        <button class="form-submit">Enviar sol·licitud ✓</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span>Loop</span>Card</div>
+  <div class="footer-slogan">"Cada targeta, una història de reciclatge"</div>
+  <div class="footer-links">
+    <a href="#quienes-somos">Nosaltres</a>
+    <a href="#productes">Productes</a>
+    <a href="#sectors">Sectors</a>
+    <a href="#equip">Equip</a>
+    <a href="#contacte">Contacte</a>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-copy">© 2026 LoopCard · Polígon Industrial Can Castells 115-116, Canovelles, Barcelona · Tots els drets reservats</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  document.querySelector('.form-submit').addEventListener('click', function() {
+    this.textContent = '✓ Sol·licitud enviada!';
+    this.style.background = '#0f6e56';
+    setTimeout(() => {
+      this.textContent = 'Enviar sol·licitud ✓';
+      this.style.background = '';
+    }, 3000);
+  });
+</script>
+</body>
+</html>
